@@ -25,7 +25,7 @@ function Footers() {
           <div>
             <img
               className="h-32 w-32"
-              src="https://scontent.fdac31-1.fna.fbcdn.net/v/t39.30808-6/300813538_389909113295977_5089751067758201927_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=e2an-GSiRdIAX84Ytjm&_nc_ht=scontent.fdac31-1.fna&oh=00_AfAC6g2b6Dk3aUySvtns5D0d705jqD2boWSudukQxSgraA&oe=65D8E642"
+              src="https://media.licdn.com/dms/image/C4E0BAQFa4a4sDSQ2Tw/company-logo_200_200/0/1630621716683/flow_events_agency_logo?e=2147483647&v=beta&t=Jy5ZfBnCZL5SCCkQsGQNBPvTnZM6UbUs3NnHHBUq1Ww"
             ></img>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
