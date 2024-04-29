@@ -24,7 +24,7 @@ const ThumbnailCarousel = ({ images }) => {
       <div className="relative h-6/12">
         <button
           onClick={goToPrevSlide}
-          className="absolute inset-y-0 left-0 z-10 bg-gray-800 bg-opacity-50 text-white hover:bg-opacity-75 flex items-center justify-center w-10 h-full focus:outline-none"
+          className="absolute inset-y-0 left-0 z-0 bg-gray-800 bg-opacity-50 text-white hover:bg-opacity-75 flex items-center justify-center w-10 h-full focus:outline-none"
         >
           &lt;
         </button>
@@ -35,7 +35,7 @@ const ThumbnailCarousel = ({ images }) => {
         />
         <button
           onClick={goToNextSlide}
-          className="absolute inset-y-0 right-0 z-10 bg-gray-800 bg-opacity-50 text-white hover:bg-opacity-75 flex items-center justify-center w-10 h-full focus:outline-none"
+          className="absolute inset-y-0 right-0 z-0 bg-gray-800 bg-opacity-50 text-white hover:bg-opacity-75 flex items-center justify-center w-10 h-full focus:outline-none"
         >
           &gt;
         </button>

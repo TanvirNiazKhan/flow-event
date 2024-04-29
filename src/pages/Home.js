@@ -117,7 +117,9 @@ const Home = () => {
         <p className="text-4xl font-bold underline underline-offset-1 text-violet-700">
           Trending Events
         </p>
-        <p className="text-xl font-bold text-blue-600">See all events</p>
+        <NavLink to="/event">
+          <p className="text-xl font-bold text-blue-600">See all events</p>
+        </NavLink>
       </div>
       {/* Render each chunk of cards in a separate row */}
       {chunkedCards.map((chunk, index) => (
