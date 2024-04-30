@@ -9,6 +9,7 @@ import ShowFavoriteEvent from "../components/layouts/ShowFavoriteEvent";
 const Tabs = ({ color }) => {
   const [openTab, setOpenTab] = React.useState(1);
   const [{ user }, dispatch] = useStateValue();
+  console.log(user);
   return (
     <>
       {user ? (
@@ -83,7 +84,7 @@ const Tabs = ({ color }) => {
                     className={openTab === 1 ? "block" : "hidden"}
                     id="link1"
                   >
-                    <Profile />
+                    <Profile user={user}/>
                   </div>
                   <div
                     className={openTab === 2 ? "block" : "hidden"}
