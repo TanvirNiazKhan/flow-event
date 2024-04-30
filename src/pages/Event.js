@@ -2,6 +2,7 @@ import React from "react";
 import { db } from "../Firebase/firebase";
 import { doc, getDocFromCache, collection, getDocs } from "firebase/firestore";
 import ShowEvent from "../components/layouts/ShowEvent";
+import { NavLink } from "react-router-dom";
 function Event() {
   const colRef = collection(db, "events");
   getDocs(colRef).then((snapshot) => {
@@ -147,6 +148,9 @@ function Event() {
         </div>
       </div>
       <div>
+        <NavLink to ="/event/1">
+          <ShowEvent/>
+        </NavLink>
         <ShowEvent />
         <ShowEvent />
         <ShowEvent />

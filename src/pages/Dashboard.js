@@ -5,6 +5,7 @@ import Home from "./Home";
 import Profile from "../components/layouts/Profile";
 import Event from "./Event";
 import ShowEvent from "../components/layouts/ShowEvent";
+import ShowFavoriteEvent from "../components/layouts/ShowFavoriteEvent";
 const Tabs = ({ color }) => {
   const [openTab, setOpenTab] = React.useState(1);
   const [{ user }, dispatch] = useStateValue();
@@ -88,8 +89,7 @@ const Tabs = ({ color }) => {
                     className={openTab === 2 ? "block" : "hidden"}
                     id="link2"
                   >
-                    <ShowEvent />
-                    <ShowEvent />
+                    <ShowFavoriteEvent/>  
                   </div>
                   <div
                     className={openTab === 3 ? "block" : "hidden"}

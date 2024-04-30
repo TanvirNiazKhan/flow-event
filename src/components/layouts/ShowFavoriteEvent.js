@@ -1,8 +1,8 @@
 import React from "react";
 
-function ShowEvent() {
+function ShowFavoriteEvent() {
   return (
-    <div className="w-10/12 m-4 border border-gray-300 rounded-lg shadow-md">
+    <div className="w-12/12 m-4 border border-gray-300 rounded-lg shadow-md">
       <div className="max-w-sm w-12/12 lg:max-w-full lg:flex">
         <div className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden">
           <img
@@ -42,11 +42,7 @@ function ShowEvent() {
               <p className="text-gray-900 leading-none">Jonathan Reinink</p>
               <p className="text-gray-600">Aug 18</p>
             </div>
-            <div>
-               <button class="ml-4 bg-transparent hover:bg-purple-500 text-purple-600 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded">
-                  Add to Favorites
-                </button>
-            </div>
+            
             
           </div>
         </div>
@@ -55,4 +51,4 @@ function ShowEvent() {
   );
 }
 
-export default ShowEvent;
+export default ShowFavoriteEvent;

@@ -18,6 +18,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./Firebase/firebase";
 import { useStateValue } from "../src/contexts/StateProvider";
 import TabsRender, { TabsWithIcon } from "./pages/Dashboard";
+import EventDetails from "./pages/EventDetails";
 function App() {
   const [{ user }, dispatch] = useStateValue();
 
@@ -59,6 +60,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/event" element={<Event />} />
           <Route path="/profile" element={<TabsRender />} />
+          <Route path="/event/:id" element={<EventDetails/>}/>
         </Routes>
       </BrowserRouter>
     </div>
