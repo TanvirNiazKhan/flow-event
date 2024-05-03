@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import ProfileDetails from "../layouts/ProfileDetails";
 
-const Profile = ({user}) => {
+const Profile = ({ user }) => {
+  const [phone, setPhone] = useState(user.user_phone);
+
+  const handlePhoneChange = (e) => {
+    setPhone(e.target.value);
+  };
+
   return (
     <div className="w-full mx-2 h-full text-start">
       <div className="w-full bg-white p-3 shadow-sm rounded-sm h-full">
@@ -26,18 +32,25 @@ const Profile = ({user}) => {
         </div>
         <div className="w-full text-gray-700">
           <div className="w-full grid md:grid-cols-2 text-lg m-auto">
-            <ProfileDetails label="Name" value={user.user_name}/>
-            <ProfileDetails label="Gender" value="Female"/>
-            
-            <ProfileDetails label="Email" value={user.user_email}/>
-            <ProfileDetails label="Phone" value="+8801329324"/>
-            <ProfileDetails label="Current Address" value="Tongi, Gazipur"/>
-            <ProfileDetails label="Birth Date" value="08-09-1991"/>
+            <ProfileDetails label="Name" value={user.user_name} />
+            <ProfileDetails label="Gender" value="Female" />
 
+            <ProfileDetails label="Email" value={user.user_email} />
+            <div className="w-full grid grid-cols-2">
+              <div className="px-4  font-semibold">Phone</div>
+              <input
+                type="text"
+                className="px-4  text-[0.95rem] outline-none"
+                value={phone}
+                onChange={handlePhoneChange}
+              />
+            </div>
+            <ProfileDetails label="Current Address" value="Tongi, Gazipur" />
+            <ProfileDetails label="Birth Date" value="08-09-1991" />
           </div>
         </div>
         <button className="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4">
-          Show Full Information
+          Save Information
         </button>
       </div>
     </div>

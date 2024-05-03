@@ -14,8 +14,8 @@ function Event() {
   });
   return (
     <div className="w-full flex">
-      <div className="m-2 w-3/12 max-w-screen-md relative s top-2 z-9">
-        <div className="flex flex">
+      <div className="m-2 w-3/12 max-w-screen-md relative s top-2 z-9 ">
+        <div className="flex flex-col">
           <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
             <form className="">
               <div className="relative mb-10 w-full flex  items-center justify-between rounded-md">
@@ -145,11 +145,21 @@ function Event() {
               </div>
             </form>
           </div>
+          <div className="">
+            <NavLink to="/event/createEvent">
+              <button
+                type="button"
+                className="mt-6 text-white w-full bg-gradient-to-br from-green-600 to-green-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2"
+              >
+                Create Event
+              </button>
+            </NavLink>
+          </div>
         </div>
       </div>
       <div>
-        <NavLink to ="/event/1">
-          <ShowEvent/>
+        <NavLink to="/event/1">
+          <ShowEvent />
         </NavLink>
         <ShowEvent />
         <ShowEvent />
