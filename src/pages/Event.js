@@ -1,20 +1,28 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import { db } from "../Firebase/firebase";
 import { doc, getDocFromCache, collection, getDocs } from "firebase/firestore";
 import ShowEvent from "../components/layouts/ShowEvent";
 import { NavLink } from "react-router-dom";
 function Event() {
-  const colRef = collection(db, "events");
-  getDocs(colRef).then((snapshot) => {
-    let events = [];
-    snapshot.docs.forEach((doc) => {
-      events.push({ ...doc.data(), id: doc.id });
-    });
-    console.log(events);
-  });
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    // Fetch events data from Firestore when the component mounts
+    const fetchEvents = async () => {
+      const colRef = collection(db, "events");
+      try {
+        const snapshot = await getDocs(colRef);
+        const eventsData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setEvents(eventsData);
+      } catch (error) {
+        console.error("Error fetching events: ", error);
+      }
+    };
+    fetchEvents();
+  }, []); 
   return (
     <div className="w-full flex">
-      <div className="m-2 w-3/12 max-w-screen-md relative s top-2 z-9 ">
+      <div className="m-2 w-4/12 max-w-screen-md relative s top-2 z-9 ">
         <div className="flex flex-col">
           <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
             <form className="">
@@ -78,24 +86,6 @@ function Event() {
                   />
                 </div>
 
-                {/* <div className="flex flex-col">
-                  <label
-                    for="manufacturer"
-                    className="text-sm font-medium text-stone-600 text-start"
-                  >
-                    Manufacturer
-                  </label>
-
-                  <select
-                    id="manufacturer"
-                    className="mt-2 block w-full rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                  >
-                    <option>Cadberry</option>
-                    <option>Starbucks</option>
-                    <option>Hilti</option>
-                  </select>
-                </div> */}
-
                 <div className="flex flex-col">
                   <label
                     for="date"
@@ -158,14 +148,11 @@ function Event() {
         </div>
       </div>
       <div>
-        <NavLink to="/event/1">
-          <ShowEvent />
-        </NavLink>
-        <ShowEvent />
-        <ShowEvent />
-        <ShowEvent />
-        <ShowEvent />
-        <ShowEvent />
+        {
+          events.map(event=>(
+            <ShowEvent event={event} />
+          ))
+        }
       </div>
     </div>
   );

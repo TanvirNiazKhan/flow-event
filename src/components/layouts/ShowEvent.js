@@ -1,14 +1,17 @@
 import React from "react";
 
-function ShowEvent() {
+function ShowEvent({event}) {
+  const eventDate = new Date(event.event_date.toDate());
+
+  const formattedDate = eventDate.toLocaleDateString();
   return (
-    <div className="w-10/12 m-4 border border-gray-300 rounded-lg shadow-md">
-      <div className="max-w-sm w-12/12 lg:max-w-full lg:flex">
+    <div className="w-11/12 m-4 border border-gray-300 rounded-lg shadow-md">
+      <div className="max-w-sm w-10/12 lg:max-w-full lg:flex">
         <div className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden">
           <img
             className="object-center object-fill w-full h-full"
-            src="https://secure.meetupstatic.com/photos/event/c/9/4/7/event_518871527.webp?w=384"
-            alt="Woman holding a mug"
+            src={event.event_img}
+            alt=""
           />
         </div>
         <div className="lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal w-full">
@@ -24,12 +27,10 @@ function ShowEvent() {
               Members only
             </p>
             <div className="text-gray-900 font-bold text-xl mb-2 text-start">
-              Can coffee make you a better developer?
+              {event.name}
             </div>
             <p className="text-gray-700 text-base text-start">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatibus quia, nulla! Maiores et perferendis eaque,
-              exercitationem praesentium nihil .loremklfsdjkj fjkdlsafk fkdlsajf
+              {event.short_description}
             </p>
           </div>
           <div className="flex items-center">
@@ -38,9 +39,9 @@ function ShowEvent() {
               src="/img/jonathan.jpg"
               alt="Avatar of Jonathan Reinink"
             />
-            <div className="text-sm">
-              <p className="text-gray-900 leading-none">Jonathan Reinink</p>
-              <p className="text-gray-600">Aug 18</p>
+            <div className="text-sm w-40">
+              <p className="text-gray-900 leading-none">{event.hosted_by}</p>
+              <p className="text-gray-600">{formattedDate}</p>
             </div>
             <div>
                <button class="ml-4 bg-transparent hover:bg-purple-500 text-purple-600 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded">

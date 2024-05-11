@@ -12,7 +12,7 @@ function CreateEvent() {
   const [amount, setAmount] = useState("");
   const [eventName, setEventName] = useState("");
   const [event_img, setEvent_img] = useState("");
-  
+  const [short_description, setShort_description] = useState("");
   const [eventDetails, setEventDetails] = useState("");
   const [eventLocation, setEventLocation] = useState("");
   const [organizerName, setOrganizerName] = useState("");
@@ -38,6 +38,7 @@ function CreateEvent() {
       event_img: event_img, // Placeholder for event image URL
       event_location: eventLocation,
       hosted_by: organizerName,
+      short_description: short_description,
     };
 
     try {
@@ -50,11 +51,13 @@ function CreateEvent() {
       setEventType("free");
       setAmount("");
       setEventName("");
+      setEvent_img("");
       setEventDetails("");
       setEventLocation("");
       setOrganizerName("");
       setContactNumber("");
       setDeadline("");
+      setShort_description("")
     } catch (error) {
       console.error("Error adding event: ", error);
     }
@@ -71,6 +74,8 @@ function resetFormFields() {
   setOrganizerName("");
   setContactNumber("");
   setDeadline("");
+  setShort_description("");
+  setEvent_img("");
   }
 
 
@@ -82,7 +87,7 @@ function resetFormFields() {
             <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
               <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
                 <div className="text-gray-600">
-                  <p className="font-bold text-lg text-purple-500 font-bold">
+                  <p className="text-lg text-purple-500 font-bold">
                     Event Details
                   </p>
                   <p>Please fill out all the fields.</p>
@@ -120,6 +125,20 @@ function resetFormFields() {
                         value={eventDetails}
                         onChange={(e) => setEventDetails(e.target.value)}
                         placeholder="Give Event Details here"
+                      />
+                    </div>
+                    <div className="md:col-span-6 text-left">
+                      <label htmlFor="event_location" className="font-bold">
+                         Short Description
+                      </label>
+                      <input
+                        type="text"
+                        name="short_description"
+                        id="short_description"
+                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        value={short_description}
+                        onChange={(e) => setShort_description(e.target.value)}
+                        placeholder=""
                       />
                     </div>
 
