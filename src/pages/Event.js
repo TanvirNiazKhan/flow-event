@@ -1,10 +1,12 @@
-import React,{useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../Firebase/firebase";
 import { doc, getDocFromCache, collection, getDocs } from "firebase/firestore";
 import ShowEvent from "../components/layouts/ShowEvent";
 import { NavLink } from "react-router-dom";
+import { useStateValue } from "../contexts/StateProvider";
 function Event() {
   const [events, setEvents] = useState([]);
+
 
   useEffect(() => {
     // Fetch events data from Firestore when the component mounts
@@ -19,7 +21,7 @@ function Event() {
       }
     };
     fetchEvents();
-  }, []); 
+  }, []);
   return (
     <div className="w-full flex">
       <div className="m-2 w-4/12 max-w-screen-md relative s top-2 z-9 ">
@@ -147,9 +149,10 @@ function Event() {
           </div>
         </div>
       </div>
+      <NavLink to=""></NavLink>
       <div>
         {
-          events.map(event=>(
+          events.map(event => (
             <ShowEvent event={event} />
           ))
         }

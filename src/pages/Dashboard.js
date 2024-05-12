@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useStateValue } from "../contexts/StateProvider";
 import userContext, { initialState } from "../contexts/reducer";
 import Home from "./Home";
+import { db } from "../Firebase/firebase";
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 import Profile from "../components/layouts/Profile";
 import Event from "./Event";
 import ShowEvent from "../components/layouts/ShowEvent";
@@ -9,6 +11,52 @@ import ShowFavoriteEvent from "../components/layouts/ShowFavoriteEvent";
 const Tabs = ({ color }) => {
   const [openTab, setOpenTab] = React.useState(1);
   const [{ user }, dispatch] = useStateValue();
+  const [favoriteEvents, setFavoriteEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchFavoriteEvents = async () => {
+      try {
+        // Get the user document reference
+        const userDocRef = doc(db, "users", user.user_id);
+        const userDocSnapshot = await getDoc(userDocRef);
+
+        if (userDocSnapshot.exists()) {
+          // Get the user data
+          const userData = userDocSnapshot.data();
+          // Get the favorite events array from user data
+          const favoriteEventIds = userData.favorites;
+
+          if (favoriteEventIds.length > 0) {
+            // Fetch details of favorite events from the "events" collection
+            const favoriteEventsData = await Promise.all(
+              favoriteEventIds.map(async (eventId) => {
+                const eventDocRef = doc(db, "events", eventId);
+                const eventDocSnapshot = await getDoc(eventDocRef);
+                if (eventDocSnapshot.exists()) {
+                  return eventDocSnapshot.data();
+                } else {
+                  console.error(`Event with ID ${eventId} not found.`);
+                  return null;
+                }
+              })
+            );
+
+            // Filter out null values (in case an event wasn't found)
+            const filteredFavoriteEvents = favoriteEventsData.filter((event) => event !== null);
+
+            setFavoriteEvents(filteredFavoriteEvents);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching favorite events:", error);
+      }
+    };
+
+    if (user) {
+      fetchFavoriteEvents();
+    }
+  }, [user]);
+
   console.log(user);
   return (
     <>
@@ -84,13 +132,20 @@ const Tabs = ({ color }) => {
                     className={openTab === 1 ? "block" : "hidden"}
                     id="link1"
                   >
-                    <Profile user={user}/>
+                    <Profile user={user} />
                   </div>
                   <div
                     className={openTab === 2 ? "block" : "hidden"}
                     id="link2"
                   >
-                    <ShowFavoriteEvent/>  
+                    <div>
+                      {/* <h2 className="text-2xl font-bold mb-4">Favorite Events</h2> */}
+                      {favoriteEvents.length > 0 ? (
+                        favoriteEvents.map((event) => <ShowFavoriteEvent key={event.id} event={event} />)
+                      ) : (
+                        <p>No favorite events found.</p>
+                      )}
+                    </div>
                   </div>
                   <div
                     className={openTab === 3 ? "block" : "hidden"}

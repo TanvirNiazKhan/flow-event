@@ -1,8 +1,48 @@
-import React from "react";
-
+import React ,{useEffect,useState}from "react";
+import { useStateValue } from "../../contexts/StateProvider";
+import { arrayUnion, doc, updateDoc,getDoc } from "firebase/firestore";
+import { db } from "../../Firebase/firebase";
 function ShowEvent({event}) {
   const eventDate = new Date(event.event_date.toDate());
-
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [{user},dispatch]=useStateValue();
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (user) {
+        try {
+          const userDocRef = doc(db, "users", user.user_id);
+          const userDocSnapshot = await getDoc(userDocRef);
+          if (userDocSnapshot.exists()) {
+            const userData = userDocSnapshot.data();
+            setIsFavorite(userData.favorites.includes(event.id));
+          }
+        } catch (error) {
+          console.error("Error checking favorite status:", error);
+        }
+      }
+    };
+    checkFavoriteStatus();
+  }, [user, event.id]);
+  const handleAddToFavorites = async () => {
+    if (user) {
+      try {
+        const userDocRef = doc(db, "users", user.user_id);
+        if (!isFavorite) {
+          await updateDoc(userDocRef, {
+            favorites: arrayUnion(event.id)
+          });
+          setIsFavorite(true);
+          console.log("Event added to favorites successfully!");
+        } else {
+          console.log("Event is already in favorites.");
+        }
+      } catch (error) {
+        console.error("Error adding event to favorites:", error);
+      }
+    } else {
+      console.log("User not authenticated. Please log in to add events to favorites.");
+    }
+  };
   const formattedDate = eventDate.toLocaleDateString();
   return (
     <div className="w-11/12 m-4 border border-gray-300 rounded-lg shadow-md">
@@ -36,18 +76,27 @@ function ShowEvent({event}) {
           <div className="flex items-center">
             <img
               className="w-10 h-10 rounded-full mr-4"
-              src="/img/jonathan.jpg"
+              src="https://th.bing.com/th/id/OIP.YyIPGs_HGe7qNiklWMWYpgHaHa?rs=1&pid=ImgDetMain"
               alt="Avatar of Jonathan Reinink"
             />
             <div className="text-sm w-40">
               <p className="text-gray-900 leading-none">{event.hosted_by}</p>
               <p className="text-gray-600">{formattedDate}</p>
             </div>
-            <div>
-               <button class="ml-4 bg-transparent hover:bg-purple-500 text-purple-600 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded">
-                  Add to Favorites
-                </button>
-            </div>
+            {user && (
+              <div>
+                {!isFavorite ? (
+                  <button
+                    onClick={handleAddToFavorites}
+                    className="ml-4 bg-transparent hover:bg-purple-500 text-purple-600 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded"
+                  >
+                    Add to Favorites
+                  </button>
+                ) : (
+                  <p className="text-green-600 ml-4">Already in Favorites</p>
+                )}
+              </div>
+            )}
             
           </div>
         </div>
