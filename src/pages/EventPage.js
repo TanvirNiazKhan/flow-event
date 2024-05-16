@@ -1,12 +1,13 @@
 import React from "react";
-import image from "./image.png";
+// import image from "./image.png";
 import NotificationCard from "../components/layouts/NotificationCard";
 import Timer from "../components/layouts/Timer";
+import { image } from "../resources/image.png"
 import Ticket from "../components/layouts/Ticket";
 export const EventPage = () => {
     return (
         <div className="bg-gray-100">
-            <img src={image} alt="Your Image" className="w-full h-auto" />
+            <img src="https://secure.meetupstatic.com/photos/event/e/5/2/a/600_493978666.webp?w=384" alt="Your Image" className="w-full h-60" />
             <div className="container mx-auto p-4">
                 <div className="flex flex-row">
                     <div className="w-2/3 p-4">
