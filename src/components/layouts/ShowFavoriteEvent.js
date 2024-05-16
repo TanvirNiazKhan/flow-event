@@ -1,11 +1,11 @@
-import React ,{useEffect,useState}from "react";
+import React, { useEffect, useState } from "react";
 import { useStateValue } from "../../contexts/StateProvider";
-import { arrayUnion, doc, updateDoc,getDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
-function ShowEvent({event}) {
+function ShowEvent({ event }) {
   const eventDate = new Date(event.event_date.toDate());
   const [isFavorite, setIsFavorite] = useState(false);
-  const [{user},dispatch]=useStateValue();
+  const [{ user }, dispatch] = useStateValue();
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       if (user) {
@@ -83,7 +83,7 @@ function ShowEvent({event}) {
               <p className="text-gray-900 leading-none">{event.hosted_by}</p>
               <p className="text-gray-600">{formattedDate}</p>
             </div>
-            {user && (
+            {/* {user && (
               <div>
                 {!isFavorite ? (
                   <button
@@ -96,8 +96,8 @@ function ShowEvent({event}) {
                   <p className="text-green-600 ml-4">Already in Favorites</p>
                 )}
               </div>
-            )}
-            
+            )} */}
+
           </div>
         </div>
       </div>

@@ -1,20 +1,86 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../Firebase/firebase";
 import { doc, getDocFromCache, collection, getDocs } from "firebase/firestore";
 import ShowEvent from "../components/layouts/ShowEvent";
+import { NavLink } from "react-router-dom";
+import { useStateValue } from "../contexts/StateProvider";
 function Event() {
-  const colRef = collection(db, "events");
-  getDocs(colRef).then((snapshot) => {
-    let events = [];
-    snapshot.docs.forEach((doc) => {
-      events.push({ ...doc.data(), id: doc.id });
+  const [events, setEvents] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [wordEntered, setWordEntered] = useState("");
+  const [showResults, setShowResults] = useState(false);
+  useEffect(() => {
+    // Fetch events data from Firestore when the component mounts
+    const fetchEvents = async () => {
+      const colRef = collection(db, "events");
+      try {
+        const snapshot = await getDocs(colRef);
+        const eventsData = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setEvents(eventsData);
+      } catch (error) {
+        console.error("Error fetching events: ", error);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  const handleNameFilter = (event) => {
+    const searchWord = event.target.value;
+    setWordEntered(searchWord);
+    const newFilter = events.filter((value) => {
+      return value.name.toLowerCase().includes(searchWord.toLowerCase());
     });
-    console.log(events);
-  });
+
+    if (searchWord === "") {
+      setFilteredData([]);
+      setWordEntered("");
+      setShowResults(false);
+    } else {
+      setFilteredData(newFilter);
+      setShowResults(true);
+    }
+  };
+  const handleIdFilter = (event) => {
+    const searchWord = event.target.value;
+    setWordEntered(searchWord);
+    const newFilter = events.filter((value) => {
+      return value.id.toLowerCase().includes(searchWord.toLowerCase());
+    });
+
+    if (searchWord === "") {
+      setFilteredData([]);
+      setWordEntered("");
+      setShowResults(false);
+    } else {
+      setFilteredData(newFilter);
+      setShowResults(true);
+    }
+  };
+  const handleAreaFilter = (event) => {
+    const searchWord = event.target.value;
+    setWordEntered(searchWord);
+    const newFilter = events.filter((value) => {
+      return value.event_location
+        .toLowerCase()
+        .includes(searchWord.toLowerCase());
+    });
+
+    if (searchWord === "") {
+      setFilteredData([]);
+      setWordEntered("");
+      setShowResults(false);
+    } else {
+      setFilteredData(newFilter);
+      setShowResults(true);
+    }
+  };
   return (
     <div className="w-full flex">
-      <div className="m-2 w-3/12 max-w-screen-md relative s top-2 z-9">
-        <div className="flex flex">
+      <div className="m-2 w-4/12 max-w-screen-md relative s top-2 z-9 ">
+        <div className="flex flex-col">
           <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
             <form className="">
               <div className="relative mb-10 w-full flex  items-center justify-between rounded-md">
@@ -44,6 +110,7 @@ function Event() {
                   name="search"
                   className="h-12 w-full cursor-text rounded-md border border-gray-100 bg-gray-100 py-4 pr-40 pl-12 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                   placeholder="Search by name of event"
+                  onChange={handleNameFilter}
                 />
               </div>
 
@@ -60,6 +127,7 @@ function Event() {
                     id="name"
                     placeholder="1234"
                     className="mt-2 block w-full rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    onChange={handleIdFilter}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -74,26 +142,9 @@ function Event() {
                     id="name"
                     placeholder="Search by Place"
                     className="mt-2 block w-full rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    onChange={handleAreaFilter}
                   />
                 </div>
-
-                {/* <div className="flex flex-col">
-                  <label
-                    for="manufacturer"
-                    className="text-sm font-medium text-stone-600 text-start"
-                  >
-                    Manufacturer
-                  </label>
-
-                  <select
-                    id="manufacturer"
-                    className="mt-2 block w-full rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                  >
-                    <option>Cadberry</option>
-                    <option>Starbucks</option>
-                    <option>Hilti</option>
-                  </select>
-                </div> */}
 
                 <div className="flex flex-col">
                   <label
@@ -144,15 +195,33 @@ function Event() {
               </div>
             </form>
           </div>
+          <div className="">
+            <NavLink to="/event/createEvent">
+              <button
+                type="button"
+                className="mt-6 text-white w-full bg-gradient-to-br from-green-600 to-green-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2"
+              >
+                Create Event
+              </button>
+            </NavLink>
+          </div>
         </div>
       </div>
-      <div>
-        <ShowEvent />
-        <ShowEvent />
-        <ShowEvent />
-        <ShowEvent />
-        <ShowEvent />
-      </div>
+      <NavLink to=""></NavLink>
+      {showResults && (
+        <div>
+          {filteredData.map((event) => (
+            <ShowEvent event={event} />
+          ))}
+        </div>
+      )}
+      {!showResults && (
+        <div>
+          {events.map((event) => (
+            <ShowEvent event={event} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

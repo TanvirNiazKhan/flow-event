@@ -32,14 +32,14 @@ function Nav() {
             ></img>
           </NavLink>
         </div>
-        <div className="flex justify-between w-4/12">
+        <div className="flex justify-between w-6/12">
           {" "}
           {/* Added flex className here */}
           <NavLink
             to="/"
             className={({ isActive }) =>
               isActive
-                ? "font-bold text-lg text-purple-500 "
+                ? "font-bold text-lg text-purple-500 md:text"
                 : "font-bold text-lg"
             }
           >
