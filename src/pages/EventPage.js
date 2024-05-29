@@ -1,17 +1,47 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 // import image from "./image.png";
+import { db } from "../Firebase/firebase";
+import { useParams } from "react-router-dom";
+import { doc, getDocFromCache, collection, getDocs,getDoc } from "firebase/firestore";
 import NotificationCard from "../components/layouts/NotificationCard";
 import Timer from "../components/layouts/Timer";
-import { image } from "../resources/image.png"
 import Ticket from "../components/layouts/Ticket";
+import { useLocation } from "react-router-dom";
 export const EventPage = () => {
+    const { eventId } = useParams();
+  const [event, setEvent] = useState(null);
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const eventRef = doc(db, "events", eventId);
+        const eventDoc = await getDoc(eventRef);
+        if (eventDoc.exists()) {
+          setEvent(eventDoc.data());
+        } else {
+          console.error("No such event!");
+        }
+      } catch (error) {
+        console.error("Error fetching event:", error);
+      }
+    };
+
+    fetchEvent();
+  }, [eventId]);
+
+  console.log(event);
+  
+    if (!event) {
+      return <div>Loading...</div>;
+    }
+    
     return (
-        <div className="bg-gray-100">
-            <img src="https://secure.meetupstatic.com/photos/event/e/5/2/a/600_493978666.webp?w=384" alt="Your Image" className="w-full h-60" />
+        <div className="bg-gray-100 w-10/12 m-auto" >
+            <img src="https://secure.meetupstatic.com/photos/event/e/5/2/a/600_493978666.webp?w=384" alt="Your Image" className="w-full h-[500px] "  />
             <div className="container mx-auto p-4">
                 <div className="flex flex-row">
                     <div className="w-2/3 p-4">
-                        <h1 className="text-3xl">Hatirjheel Summer 7.5K Run 2024</h1>
+                        <h1 className="text-3xl">gfdksj</h1>
                         <p className="text-sm">at Hatirjheel,Dhaka</p>
                         <p className="text-sm">Date & Time</p>
                         <NotificationCard />

@@ -62,9 +62,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/event" element={<Event />} />
           <Route path="/profile" element={<TabsRender />} />
-          <Route path="/event/:id" element={<EventDetails />} />
           <Route path="/event/createEvent" element={<CreateEvent />} />
-          <Route path="/event/eventPage" element={<EventPage />} />
+          <Route path="/event/:eventPage" element={<EventPage />} />
         </Routes>
       </BrowserRouter>
     </div>
