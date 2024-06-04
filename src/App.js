@@ -20,6 +20,7 @@ import { useStateValue } from "../src/contexts/StateProvider";
 import TabsRender, { TabsWithIcon } from "./pages/Dashboard";
 import EventDetails from "./pages/EventDetails";
 import CreateEvent from "./pages/CreateEvent";
+import { EventPage } from "./pages/EventPage";
 function App() {
   const [{ user }, dispatch] = useStateValue();
 
@@ -61,8 +62,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/event" element={<Event />} />
           <Route path="/profile" element={<TabsRender />} />
-          <Route path="/event/:id" element={<EventDetails />} />
           <Route path="/event/createEvent" element={<CreateEvent />} />
+          <Route path="/event/:eventPage" element={<EventPage />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -211,14 +211,20 @@ function Event() {
       {showResults && (
         <div>
           {filteredData.map((event) => (
-            <ShowEvent event={event} />
+            <NavLink to={`/event/${event.id}`}>
+               <ShowEvent event={event} />
+            </NavLink>
+           
           ))}
         </div>
       )}
       {!showResults && (
         <div>
           {events.map((event) => (
-            <ShowEvent event={event} />
+            <NavLink to={`/event/${event.id}` }>
+              <ShowEvent event={event} />
+            </NavLink>
+            
           ))}
         </div>
       )}
