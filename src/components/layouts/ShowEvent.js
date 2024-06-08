@@ -2,6 +2,7 @@ import React ,{useEffect,useState}from "react";
 import { useStateValue } from "../../contexts/StateProvider";
 import { arrayUnion, doc, updateDoc,getDoc } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
+import { NavLink } from "react-router-dom";
 function ShowEvent({event}) {
   const eventDate = new Date(event.event_date.toDate());
   const [isFavorite, setIsFavorite] = useState(false);
@@ -66,9 +67,12 @@ function ShowEvent({event}) {
               </svg>
               Members only
             </p>
-            <div className="text-gray-900 font-bold text-xl mb-2 text-start">
-              {event.name}
-            </div>
+            <NavLink to={`/event/${event.id} `}>
+              <div className="text-gray-900 font-bold text-xl mb-2 text-start">
+                {event.name}
+              </div>
+            </NavLink>
+            
             <p className="text-gray-700 text-base text-start">
               {event.short_description}
             </p>

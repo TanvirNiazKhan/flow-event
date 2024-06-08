@@ -8,16 +8,18 @@ import Timer from "../components/layouts/Timer";
 import Ticket from "../components/layouts/Ticket";
 import { useLocation } from "react-router-dom";
 export const EventPage = () => {
-    const { eventId } = useParams();
+    const  eventId  = useParams();
+    console.log("from eventpage",eventId.eventPage);
   const [event, setEvent] = useState(null);
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const eventRef = doc(db, "events", eventId);
+        const eventRef = doc(db, "events", eventId.eventPage);
         const eventDoc = await getDoc(eventRef);
         if (eventDoc.exists()) {
           setEvent(eventDoc.data());
+        //   console.log(eventDoc.data())
         } else {
           console.error("No such event!");
         }
@@ -37,13 +39,13 @@ export const EventPage = () => {
     
     return (
         <div className="bg-gray-100 w-10/12 m-auto" >
-            <img src="https://secure.meetupstatic.com/photos/event/e/5/2/a/600_493978666.webp?w=384" alt="Your Image" className="w-full h-[500px] "  />
+            <img src={event.event_img} alt="Your Image" className="w-full h-[500px] "  />
             <div className="container mx-auto p-4">
                 <div className="flex flex-row">
                     <div className="w-2/3 p-4">
-                        <h1 className="text-3xl">gfdksj</h1>
-                        <p className="text-sm">at Hatirjheel,Dhaka</p>
-                        <p className="text-sm">Date & Time</p>
+                        <h1 className="text-3xl">{event.name}</h1>
+                        <p className="text-sm">at {event.event_location}</p>
+                        <p className="text-sm">{(event.event_date).toLocaleDateString}</p>
                         <NotificationCard />
                         <p className="text-red-600	font-bold">registration ended</p>
                         <Timer />
@@ -51,10 +53,7 @@ export const EventPage = () => {
                         <div className="py-4">
                             <p className="text-lg font-bold">ABOUT THIS EVENT</p>
                             <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                Corporis, excepturi. Harum ea suscipit rerum exercitationem vel
-                                qui ab. Quis, vitae ad corporis iure harum molestias laudantium
-                                nobis eum animi exercitationem!
+                                {event.details}
                             </p>
                             <button className="text-blue-800 py-3">Read more...</button>
                         </div>
@@ -62,8 +61,8 @@ export const EventPage = () => {
                         <div className="bg-white flex items-center">
                             <div className="w-1/4 p-2 ">image</div>
                             <div className="w-2/4 p-2 ">
-                                <p className="text-lg">Name of the organuzer </p>
-                                <p className="text-xs">num of followers</p>
+                                <p className="text-lg">{event.hosted_by} </p>
+                                <p className="text-xs">2,000 followers</p>
                             </div>
                             <div className="w-1/4 p-2">
                                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -147,8 +146,7 @@ export const EventPage = () => {
                     </div>
                 </div>
             </div>
-            <h1 className="text-2xl font-bold p-4">Welcome to My Website</h1>
-            <p className="mt-2 text-lg">ADD card Component</p>
+            
         </div>
     );
 };
