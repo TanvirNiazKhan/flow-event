@@ -19,7 +19,7 @@ export const EventPage = () => {
         const eventDoc = await getDoc(eventRef);
         if (eventDoc.exists()) {
           setEvent(eventDoc.data());
-        //   console.log(eventDoc.data())
+          console.log(eventDoc.data())
         } else {
           console.error("No such event!");
         }
