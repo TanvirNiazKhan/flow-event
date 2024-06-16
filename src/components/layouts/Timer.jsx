@@ -4,7 +4,7 @@ import useTimer from "../../hooks/useTimer";
 const Timer = () => {
     const {days,hours,minutes,seconds}=useTimer({timerDays: 2.5});
     return (
-        <div className=" w-48">
+        <div className=" w-48 mt-12">
             <div className="flex">
                 <div className="flex flex-col justify-center items-center">
                     <div className="bg-indigo-100 text-indigo-700 p-4 mx-1 font-bold rounded-lg shadow-sm">

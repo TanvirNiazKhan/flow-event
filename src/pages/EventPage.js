@@ -1,53 +1,67 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 // import image from "./image.png";
 import { db } from "../Firebase/firebase";
 import { useParams } from "react-router-dom";
-import { doc, getDocFromCache, collection, getDocs,getDoc } from "firebase/firestore";
+import { parse, format } from "date-fns";
+import { doc, getDocFromCache, collection, getDocs, getDoc } from "firebase/firestore";
 import NotificationCard from "../components/layouts/NotificationCard";
 import Timer from "../components/layouts/Timer";
 import Ticket from "../components/layouts/Ticket";
 import { useLocation } from "react-router-dom";
 export const EventPage = () => {
-    const  eventId  = useParams();
-    console.log("from eventpage",eventId.eventPage);
-  const [event, setEvent] = useState(null);
+    const eventId = useParams();
+    console.log("from eventpage", eventId.eventPage);
+    const [event, setEvent] = useState(null);
 
-  useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const eventRef = doc(db, "events", eventId.eventPage);
-        const eventDoc = await getDoc(eventRef);
-        if (eventDoc.exists()) {
-          setEvent(eventDoc.data());
-          console.log(eventDoc.data())
-        } else {
-          console.error("No such event!");
-        }
-      } catch (error) {
-        console.error("Error fetching event:", error);
-      }
-    };
+    useEffect(() => {
+        const fetchEvent = async () => {
+            try {
+                const eventRef = doc(db, "events", eventId.eventPage);
+                const eventDoc = await getDoc(eventRef);
+                if (eventDoc.exists()) {
+                    setEvent(eventDoc.data());
+                    console.log(eventDoc.data())
+                } else {
+                    console.error("No such event!");
+                }
+            } catch (error) {
+                console.error("Error fetching event:", error);
+            }
+        };
 
-    fetchEvent();
-  }, [eventId]);
+        fetchEvent();
+    }, [eventId]);
 
-  console.log(event);
-  
+    console.log(event);
+
     if (!event) {
-      return <div>Loading...</div>;
+        return <div>Loading...</div>;
     }
-    
+
+    let eventDate;
+    if (event.event_date && event.event_date.seconds) {
+        eventDate = new Date(event.event_date.seconds * 1000);
+    } else {
+        console.error("Invalid date format:", event.event_date);
+        return <div>Invalid date format</div>;
+    }
+
+    if (!eventDate || isNaN(eventDate.getTime())) {
+        console.error("Invalid date format:", event.event_date);
+        return <div>Invalid date format</div>;
+    }
+
     return (
         <div className="bg-gray-100 w-10/12 m-auto" >
-            <img src={event.event_img} alt="Your Image" className="w-full h-[500px] "  />
+            <img src={event.event_img} alt="Your Image" className="w-full h-[500px] " />
             <div className="container mx-auto p-4">
                 <div className="flex flex-row">
                     <div className="w-2/3 p-4">
                         <h1 className="text-3xl">{event.name}</h1>
                         <p className="text-sm">at {event.event_location}</p>
                         <p className="text-sm">{(event.event_date).toLocaleDateString}</p>
-                        <NotificationCard />
-                        <p className="text-red-600	font-bold">registration ended</p>
+                        <NotificationCard date={eventDate.toLocaleDateString()} />
+                        {/* <p className="text-red-600	font-bold">registration ended</p> */}
                         <Timer />
 
                         <div className="py-4">
@@ -70,7 +84,7 @@ export const EventPage = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="py-6">
+                        {/* <div className="py-6">
                             <p className="text-sm font-bold"> Find Event</p>
                             <button class="bg-slate-200 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
                                 Button
@@ -78,7 +92,7 @@ export const EventPage = () => {
                             <button class="bg-slate-200	 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
                                 Button
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                     <div className="w-1/3 p-4 my-6">
                         <div className="flex justify-center">
@@ -146,7 +160,7 @@ export const EventPage = () => {
                     </div>
                 </div>
             </div>
-            
+
         </div>
     );
 };

@@ -1,7 +1,7 @@
 // NotificationCard.js
 import React from "react";
 
-const NotificationCard = () => {
+const NotificationCard = ({ date }) => {
     return (
         <div className="bg-white rounded-lg shadow p-4 w-48">
             <div className="flex flex-row">
@@ -19,7 +19,7 @@ const NotificationCard = () => {
                 </div>
                 <div className="w-2/3">
                     <div className="text-base font-bold">Day</div>
-                    <div className="text-xs">Date</div>
+                    <div className="text-lg text-purple-700">{date}</div>
                 </div>
             </div>
         </div>
