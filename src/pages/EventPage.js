@@ -129,7 +129,7 @@ export const EventPage = () => {
                                     Event Ticket
                                 </h2>
                             </div>
-                            <Ticket />
+                            <Ticket event={event}/>
                         </div>
 
                         <div class="bg-white rounded-lg shadow-lg border-l-4 border-orange-500 p-4 my-6">
