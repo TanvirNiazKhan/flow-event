@@ -9,7 +9,7 @@ const Ticket = ({ event }) => {
   const [{ user }, dispatch] = useStateValue();
   console.log(user);
   console.log("From Ticket", event);
-  const { name, hosted_by, event_location } = event;
+  let { name, hosted_by, event_location, event_date, event_time, additional_info } = event;
 
   const handleRegisterEvent = async () => {
     const eventData = {
@@ -19,33 +19,50 @@ const Ticket = ({ event }) => {
       user_email: user?.user_email,
       hosted_agency: "Flow Event Agency"
     };
+    let new_event_Date;
+    if (event_date && event_date.seconds) {
+      new_event_Date = new Date(event.event_date.seconds * 1000);
+  } else {
+      console.error("Invalid date format:", event.event_date);
+      return <div>Invalid date format</div>;
+  }
     console.log(eventData);
+    const eventDateString = new Date(new_event_Date).toLocaleDateString();
 
-    //send email
+    // Send email
     const templateParams = {
-        user_email: user?.user_email,
-        subject: "Event Registration Successful",
-        message: "You have successfully registered for the upcoming event",
+      to_name: user?.displayName, // Assuming `displayName` is the user's name
+      from_name: "Flow Event Agency",
+      to_email: user?.user_email, // Or any other name you want to use
+      user_email: user?.user_email,
+      event_name: name,
+      event_date: eventDateString,
+      event_location,
+      additional_info: additional_info || "N/A", // Use a default value if no additional info is provided
     };
 
     emailjs.send(
-        'service_e04hrxh', // Replace with your EmailJS service ID
-        'template_t19fhab', // Replace with your EmailJS template ID
-        templateParams,
-        'BP__gMaZH_QkHb8Zy' // Replace with your EmailJS user ID
+      'service_m9kreu8', // Replace with your EmailJS service ID
+      'template_uldlsjn', // Replace with your EmailJS template ID
+      templateParams,
+      'XeXXZY7odrzRUZRuq' // Replace with your EmailJS user ID
     )
-    .then((response) => {
+      .then((response) => {
         console.log('SUCCESS!', response.status, response.text);
         toast.success('Registration Successful!');
-    }, (error) => {
+      }, (error) => {
         console.log('FAILED...', error);
-    });
-
-
+        toast.error('Registration Failed. Please try again.');
+      });
 
     // Add a new document of registered events.
-    const docRef = await addDoc(collection(db, "registeredEvents"), eventData);
-    console.log("Document written with ID: ", docRef.id);
+    try {
+      const docRef = await addDoc(collection(db, "registeredEvents"), eventData);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      toast.error('Error registering event. Please try again.');
+    }
   };
 
   return (
