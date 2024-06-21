@@ -9,6 +9,7 @@ function Event() {
   const [filteredData, setFilteredData] = useState([]);
   const [wordEntered, setWordEntered] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [{user}]=useStateValue()
   useEffect(() => {
     // Fetch events data from Firestore when the component mounts
     const fetchEvents = async () => {
@@ -19,7 +20,12 @@ function Event() {
           ...doc.data(),
           id: doc.id,
         }));
-        setEvents(eventsData);
+        const acceptedEvents = eventsData.filter(
+          (event) => event.event_status === "accepted"
+        );
+
+        setEvents(acceptedEvents);
+        // setEvents(eventsData);
       } catch (error) {
         console.error("Error fetching events: ", error);
       }
@@ -196,14 +202,17 @@ function Event() {
             </form>
           </div>
           <div className="">
-            <NavLink to="/event/createEvent">
+            {
+              user?<NavLink to="/event/createEvent">
               <button
                 type="button"
                 className="mt-6 text-white w-full bg-gradient-to-br from-green-600 to-green-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2"
               >
                 Create Event
               </button>
-            </NavLink>
+            </NavLink>:""
+            }
+            
           </div>
         </div>
       </div>

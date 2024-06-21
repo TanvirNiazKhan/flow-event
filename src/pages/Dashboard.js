@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import Home from "./Home";
 import Profile from "../components/layouts/Profile";
 import ShowFavoriteEvent from "../components/layouts/ShowFavoriteEvent";
+import ShowMyEvents from "../components/layouts/ShowMyEvents";
 
 const Tabs = ({ color }) => {
   const [openTab, setOpenTab] = useState(1);
@@ -151,14 +152,7 @@ const Tabs = ({ color }) => {
                     className={openTab === 3 ? "block" : "hidden"}
                     id="link3"
                   >
-                    <p>
-                      Efficiently unleash cross-media information without
-                      cross-media value. Quickly maximize timely deliverables
-                      for real-time schemas.
-                      <br />
-                      <br /> Dramatically maintain clicks-and-mortar solutions
-                      without functional solutions.
-                    </p>
+                    <ShowMyEvents/>
                   </div>
                 </div>
               </div>
