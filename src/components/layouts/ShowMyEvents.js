@@ -78,7 +78,7 @@ const ShowMyEvents = () => {
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {myEvents.length === 0 && <p className="text-gray-600">No events found.</p>}
+        {myEvents?.length === 0 && <p className="text-gray-600">No events found.</p>}
         {myEvents.map((event) => (
           <div key={event.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
             <img src={event.event_img} alt={event.name} className="w-full h-48 object-cover" />
