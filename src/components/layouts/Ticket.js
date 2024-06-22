@@ -1,7 +1,7 @@
 import React from "react";
 import { useStateValue } from "../../contexts/StateProvider";
 import { db } from "../../Firebase/firebase.js";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import emailjs from 'emailjs-com';
 import { toast } from "react-toastify";
 
@@ -9,7 +9,7 @@ const Ticket = ({ event }) => {
   const [{ user }, dispatch] = useStateValue();
   console.log(user);
   console.log("From Ticket", event);
-  let { name, hosted_by, event_location, event_date, event_time, additional_info } = event;
+  let { name, hosted_by, event_location, event_date, event_time, additional_info, eventId } = event;
 
   const handleRegisterEvent = async () => {
     const eventData = {
@@ -31,38 +31,45 @@ const Ticket = ({ event }) => {
 
     // Send email
     const templateParams = {
-      to_name: user?.displayName, // Assuming `displayName` is the user's name
+      to_name: user?.displayName,
       from_name: "Flow Event Agency",
-      to_email: user?.user_email, // Or any other name you want to use
+      to_email: user?.user_email,
       user_email: user?.user_email,
       event_name: name,
       event_date: eventDateString,
       event_location,
-      additional_info: additional_info || "N/A", // Use a default value if no additional info is provided
+      additional_info: additional_info || "N/A",
     };
 
     emailjs.send(
-      'service_m9kreu8', // Replace with your EmailJS service ID
-      'template_uldlsjn', // Replace with your EmailJS template ID
+      'service_m9kreu8',
+      'template_uldlsjn',
       templateParams,
-      'XeXXZY7odrzRUZRuq' // Replace with your EmailJS user ID
+      'XeXXZY7odrzRUZRuq'
     )
-      .then((response) => {
+      .then(async (response) => {
         console.log('SUCCESS!', response.status, response.text);
         toast.success('Registration Successful!');
+
+        // Add a new document of registered events.
+        try {
+
+
+          const eventDocRef = doc(db, "events", eventId); // Ensure `eventId` is passed correctly
+          await updateDoc(eventDocRef, {
+            registered_persons: arrayUnion({
+              user_email: user?.user_email,
+              user_name: user?.user_name,
+            })
+          });
+        } catch (error) {
+          console.error("Error adding document: ", error);
+          toast.error('Error registering event. Please try again.');
+        }
       }, (error) => {
         console.log('FAILED...', error);
         toast.error('Registration Failed. Please try again.');
       });
-
-    // Add a new document of registered events.
-    try {
-      const docRef = await addDoc(collection(db, "registeredEvents"), eventData);
-      console.log("Document written with ID: ", docRef.id);
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      toast.error('Error registering event. Please try again.');
-    }
   };
 
   return (

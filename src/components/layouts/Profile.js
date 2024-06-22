@@ -33,7 +33,7 @@ const Profile = ({ user }) => {
         <div className="w-full text-gray-700">
           <div className="w-full grid md:grid-cols-2 text-lg m-auto">
             <ProfileDetails label="Name" value={user.user_name} />
-            <ProfileDetails label="Gender" value="Female" />
+            <ProfileDetails label="Gender" value="Male" />
 
             <ProfileDetails label="Email" value={user.user_email} />
             <div className="w-full grid grid-cols-2">
