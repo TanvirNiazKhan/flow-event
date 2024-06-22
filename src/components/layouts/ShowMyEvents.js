@@ -43,6 +43,7 @@ const ShowMyEvents = () => {
         const eventsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
+          registered_persons: doc.data().registered_persons || [] // Ensure registered_persons is an array
         }));
         setMyEvents(eventsData);
       } catch (error) {
@@ -124,32 +125,34 @@ const ShowMyEvents = () => {
       >
         <div>
           <h2 className="text-2xl font-semibold mb-4">Registered Persons</h2>
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                {/* Add more fields as needed */}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {selectedEvent && selectedEvent.registered_persons.map((person, index) => (
-                <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{person.user_name}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{person.user_email}</div>
-                  </td>
-                  {/* Add more fields as needed */}
+          {selectedEvent?.registered_persons && selectedEvent.registered_persons.length > 0 ? (
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {selectedEvent.registered_persons.map((person, index) => (
+                  <tr key={index}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{person.user_name}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{person.user_email}</div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-gray-600">No registered persons found.</p>
+          )}
         </div>
         <button
           onClick={closeModal}
