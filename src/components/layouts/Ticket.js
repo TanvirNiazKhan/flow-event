@@ -1,17 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useStateValue } from "../../contexts/StateProvider";
 import { db } from "../../Firebase/firebase.js";
-import { collection, addDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import emailjs from 'emailjs-com';
 import { toast } from "react-toastify";
 
 const Ticket = ({ event }) => {
   const [{ user }, dispatch] = useStateValue();
-  console.log(user);
-  console.log("From Ticket", event);
+  const [isRegistered, setIsRegistered] = useState(false);
   let { name, hosted_by, event_location, event_date, event_time, additional_info, eventId } = event;
 
+  useEffect(() => {
+    const checkRegistration = async () => {
+      if (eventId && user?.user_email) {
+        try {
+          const eventDocRef = doc(db, "events", eventId);
+          const eventDoc = await getDoc(eventDocRef);
+          if (eventDoc.exists()) {
+            const eventData = eventDoc.data();
+            const registeredPersons = eventData.registered_persons || [];
+            const userEmail = user.user_email;
+            const alreadyRegistered = registeredPersons.some(person => person.user_email === userEmail);
+            setIsRegistered(alreadyRegistered);
+          }
+        } catch (error) {
+          console.error("Error fetching event data: ", error);
+        }
+      }
+    };
+    checkRegistration();
+  }, [eventId, user]);
+
   const handleRegisterEvent = async () => {
+    if (isRegistered) {
+      toast.info('You are already registered for this event.');
+      return;
+    }
+
     const eventData = {
       name,
       hosted_by,
@@ -53,8 +78,6 @@ const Ticket = ({ event }) => {
 
         // Add a new document of registered events.
         try {
-
-
           const eventDocRef = doc(db, "events", eventId); // Ensure `eventId` is passed correctly
           await updateDoc(eventDocRef, {
             registered_persons: arrayUnion({
@@ -62,6 +85,7 @@ const Ticket = ({ event }) => {
               user_name: user?.user_name,
             })
           });
+          setIsRegistered(true);
         } catch (error) {
           console.error("Error adding document: ", error);
           toast.error('Error registering event. Please try again.');
@@ -76,16 +100,17 @@ const Ticket = ({ event }) => {
     <div className="max-w-sm rounded overflow-hidden shadow-lg border border-blue-500">
       <div className="px-6 py-4">
         <div>
-          <p>7.5km | General</p>
+          {/* <p>7.5km | General</p> */}
         </div>
         <hr className="p-4 flex justify-center items-center" />
         <div className="font-bold text-xl mb-2">Tk 1450</div>
 
         <button
           onClick={handleRegisterEvent}
-          className="font-bold py-2 px-4 rounded text-white bg-purple-600 border-2 border-purple-600 hover:bg-transparent hover:text-black transition-all duration-300 ease-in-out"
+          className={`font-bold py-2 px-4 rounded text-white border-2 transition-all duration-300 ease-in-out ${isRegistered ? 'bg-gray-400 border-gray-400 cursor-not-allowed' : 'bg-purple-600 border-purple-600 hover:bg-transparent hover:text-black'}`}
+          disabled={isRegistered}
         >
-          Register Now
+          {isRegistered ? 'Registered' : 'Register Now'}
         </button>
       </div>
     </div>

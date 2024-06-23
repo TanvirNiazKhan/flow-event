@@ -4,6 +4,8 @@ import { db } from "../../Firebase/firebase";
 import { collection, getDocs, where, query } from 'firebase/firestore';
 import Modal from 'react-modal';
 import { useStateValue } from '../../contexts/StateProvider';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable'; // Import the autoTable plugin
 
 const customModalStyle = {
   overlay: {
@@ -76,6 +78,29 @@ const ShowMyEvents = () => {
     setSelectedEvent(null);
   };
 
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text('Registered Persons', 14, 22);
+
+    if (selectedEvent?.registered_persons && selectedEvent.registered_persons.length > 0) {
+      const headers = [["Name", "Email"]];
+      const data = selectedEvent.registered_persons.map(person => [person.user_name, person.user_email]);
+
+      doc.autoTable({
+        startY: 30,
+        head: headers,
+        body: data,
+      });
+
+      doc.save('registered_persons.pdf');
+    } else {
+      doc.text('No registered persons found.', 14, 30);
+      doc.save('registered_persons.pdf');
+    }
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -126,30 +151,38 @@ const ShowMyEvents = () => {
         <div>
           <h2 className="text-2xl font-semibold mb-4">Registered Persons</h2>
           {selectedEvent?.registered_persons && selectedEvent.registered_persons.length > 0 ? (
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {selectedEvent.registered_persons.map((person, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{person.user_name}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{person.user_email}</div>
-                    </td>
+            <>
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Email
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {selectedEvent.registered_persons.map((person, index) => (
+                    <tr key={index}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{person.user_name}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{person.user_email}</div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <button
+                onClick={handleDownloadPDF}
+                className="mt-4 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Download PDF
+              </button>
+            </>
           ) : (
             <p className="text-gray-600">No registered persons found.</p>
           )}
