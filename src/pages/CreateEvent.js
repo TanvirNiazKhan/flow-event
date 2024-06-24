@@ -9,6 +9,7 @@ import { db } from "../Firebase/firebase";
 import { doc, getDoc,addDoc,collection } from "firebase/firestore"
 import { useStateValue } from "../contexts/StateProvider";
 import * as Yup from "yup";
+import { Navigate, useNavigate } from "react-router-dom";
 const validationSchema = Yup.object({
   eventName: Yup.string().required("Event Title is required"),
   eventDetails: Yup.string().required("Event Details are required"), // Corrected message
@@ -43,7 +44,8 @@ function CreateEvent() {
   const [contactNumber, setContactNumber] = useState("");
   const [deadline, setDeadline] = useState("");
   const [{ user }] = useStateValue();
-  console.log(user?.user_email)
+  // console.log(user?.user_email)
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -79,12 +81,11 @@ function CreateEvent() {
       };
 
       try {
-        // Add the event data to the "events" collection in Firestore
+        
         const docRef = await addDoc(collection(db, "events"), eventData);
         console.log("Event added successfully with ID: ", docRef.id);
-        toast.success("Event submitted successfully!");
-
-        // Reset form fields after successful submission
+        toast.success("Event Request in process")
+        navigate("/");
         formik.resetForm();
       } catch (error) {
         console.error("Error adding event: ", error);
