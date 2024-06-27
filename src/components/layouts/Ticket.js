@@ -103,7 +103,7 @@ const Ticket = ({ event }) => {
           {/* <p>7.5km | General</p> */}
         </div>
         <hr className="p-4 flex justify-center items-center" />
-        <div className="font-bold text-xl mb-2">Tk 1450</div>
+        <div className="font-bold text-xl mb-2"></div>
 
         <button
           onClick={handleRegisterEvent}
