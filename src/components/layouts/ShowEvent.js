@@ -1,12 +1,14 @@
-import React ,{useEffect,useState}from "react";
+import React, { useEffect, useState } from "react";
 import { useStateValue } from "../../contexts/StateProvider";
-import { arrayUnion, doc, updateDoc,getDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 import { NavLink } from "react-router-dom";
-function ShowEvent({event}) {
-  const eventDate = new Date(event.event_date.toDate());
+
+function ShowEvent({ event }) {
+  const eventDate = new Date(event.event_date.seconds * 1000); // Convert Firestore Timestamp to JavaScript Date
   const [isFavorite, setIsFavorite] = useState(false);
-  const [{user},dispatch]=useStateValue();
+  const [{ user }, dispatch] = useStateValue();
+
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       if (user) {
@@ -24,13 +26,14 @@ function ShowEvent({event}) {
     };
     checkFavoriteStatus();
   }, [user, event.id]);
+
   const handleAddToFavorites = async () => {
     if (user) {
       try {
         const userDocRef = doc(db, "users", user.user_id);
         if (!isFavorite) {
           await updateDoc(userDocRef, {
-            favorites: arrayUnion(event.id)
+            favorites: arrayUnion(event.id),
           });
           setIsFavorite(true);
           console.log("Event added to favorites successfully!");
@@ -44,7 +47,9 @@ function ShowEvent({event}) {
       console.log("User not authenticated. Please log in to add events to favorites.");
     }
   };
+
   const formattedDate = eventDate.toLocaleDateString();
+
   return (
     <div className="w-11/12 m-4 border border-gray-300 rounded-lg shadow-md">
       <div className="max-w-sm w-10/12 lg:max-w-full lg:flex">
@@ -72,7 +77,7 @@ function ShowEvent({event}) {
                 {event.name}
               </div>
             </NavLink>
-            
+
             <p className="text-gray-700 text-base text-start">
               {event.short_description}
             </p>
@@ -101,7 +106,6 @@ function ShowEvent({event}) {
                 )}
               </div>
             )}
-            
           </div>
         </div>
       </div>

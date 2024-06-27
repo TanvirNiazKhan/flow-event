@@ -13,7 +13,7 @@ function Event() {
   const [{ user }] = useStateValue();
 
   useEffect(() => {
-    // Fetch events data from Firestore when the component mounts
+    // Function to fetch events data from Firestore
     const fetchEvents = async () => {
       const colRef = collection(db, "events");
       try {
@@ -25,14 +25,30 @@ function Event() {
         const acceptedEvents = eventsData.filter(
           (event) => event.event_status === "accepted"
         );
-
-        setEvents(acceptedEvents);
-        // setEvents(eventsData);
+        return acceptedEvents;
       } catch (error) {
         console.error("Error fetching events: ", error);
+        return [];
       }
     };
-    fetchEvents();
+
+    // Check if events data is available in local storage
+    const cachedEvents = localStorage.getItem("events");
+    const cachedTimestamp = localStorage.getItem("eventsTimestamp");
+    const currentTime = new Date().getTime();
+
+    // Check if cached data is available and not older than 24 hours
+    if (cachedEvents && cachedTimestamp && currentTime - cachedTimestamp < 86400000) {
+      console.log("from chache");
+      setEvents(JSON.parse(cachedEvents));
+    } else {
+      // Fetch data from Firestore and cache it
+      fetchEvents().then((eventsData) => {
+        setEvents(eventsData);
+        localStorage.setItem("events", JSON.stringify(eventsData));
+        localStorage.setItem("eventsTimestamp", currentTime.toString());
+      });
+    }
   }, []);
 
   const handleNameFilter = (event) => {
