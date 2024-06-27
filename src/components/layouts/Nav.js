@@ -22,14 +22,15 @@ function Nav() {
       });
   }
   return (
-    <header className="w-full items-center z-10 sticky top-0 bg-white">
-      <div className="flex items-center justify-evenly  justify-center shadow-lg">
+    <header className="w-full items-center z-10 sticky top-0 bg-white py-3">
+      <div className="flex items-center justify-around shadow-lg" >
         <div>
           <NavLink to="/">
             <img
               className="h-20 w-20 "
               src="https://media.licdn.com/dms/image/C4E0BAQFa4a4sDSQ2Tw/company-logo_200_200/0/1630621716683/flow_events_agency_logo?e=2147483647&v=beta&t=Jy5ZfBnCZL5SCCkQsGQNBPvTnZM6UbUs3NnHHBUq1Ww"
-            ></img>
+              alt=""
+            />
           </NavLink>
         </div>
         <div className="flex justify-between w-6/12">

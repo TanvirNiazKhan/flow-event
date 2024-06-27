@@ -53,18 +53,24 @@ function App() {
       <BrowserRouter>
         <ToastContainer position="top-center" />
         <Nav />
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/signUp" element={<SignUp />} />
-          <Route exact path="/career" element={<Career />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/hirePhotographer" element={<HirePhotographer />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/event" element={<Event />} />
-          <Route path="/profile" element={<TabsRender />} />
-          <Route path="/event/createEvent" element={<CreateEvent />} />
-          <Route path="/event/:eventPage" element={<EventPage />} />
-        </Routes>
+        <div className="max-w-[1440px] mx-auto">
+
+          <div className="px-4 md:px-8">
+            <Routes>
+              <Route exact path="/" element={<Home />} />
+              <Route exact path="/signUp" element={<SignUp />} />
+              <Route exact path="/career" element={<Career />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/hirePhotographer" element={<HirePhotographer />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/event" element={<Event />} />
+              <Route path="/profile" element={<TabsRender />} />
+              <Route path="/event/createEvent" element={<CreateEvent />} />
+              <Route path="/event/:eventPage" element={<EventPage />} />
+            </Routes>
+          </div>
+        </div>
+        <Footers />
       </BrowserRouter>
     </div>
   );

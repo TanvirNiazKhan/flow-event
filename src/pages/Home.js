@@ -75,65 +75,77 @@ const Home = () => {
   ];
 
   // Function to chunk the cards array into arrays of 4 elements each
-  const chunkArray = (array, chunkSize) => {
-    const chunkedArr = [];
-    for (let i = 0; i < array.length; i += chunkSize) {
-      chunkedArr.push(array.slice(i, i + chunkSize));
-    }
-    return chunkedArr;
-  };
+  // const chunkArray = (array, chunkSize) => {
+  //   const chunkedArr = [];
+  //   for (let i = 0; i < array.length; i += chunkSize) {
+  //     chunkedArr.push(array.slice(i, i + chunkSize));
+  //   }
+  //   return chunkedArr;
+  // };
 
-  // Split the cards array into chunks of 4 elements each
-  const chunkedCards = chunkArray(cards, 4);
+  // // Split the cards array into chunks of 4 elements each
+  // const chunkedCards = chunkArray(cards, 4);
 
   return (
-    <div className="w-full h-full flex-col items-center justify-center mt-1">
-      <div className="w-full h-full flex items-center justify-center">
-        <div className="w-9/12 flex items-center">
+    <div className="w-full h-full flex-col items-center justify-center">
+      <div className="w-full flex items-center justify-center">
+        <div className="w-full flex items-center">
           <Carousel images={images} />
         </div>
       </div>
-      <div className="flex justify-between w-9/12 items-center  m-auto">
-        <div>
-          <p className="text-4xl font-bold ">
-            The people platform Where interests <br></br> become friendships
-          </p>
-          <NavLink to="/signUp">
-            <button className="relative inline-flex items-center justify-center p-0.5 m-3 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
-              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                Join Now
-              </span>
-            </button>
+
+      <div className="flex flex-col-reverse md:flex-row justify-center items-center py-10 md:py-16">
+        <div className="md:text-left md:w-1/2 space-y-2 md:space-y-5">
+          <h1 className="text-2xl md:text-5xl font-bold mt-4 md:mt-0">
+            The people platform Where interests become friendships
+          </h1>
+          <p className="font-medium">Connect with like-minded individuals and transform shared interests into lasting friendships. Discover, engage, and grow together.</p>
+          <NavLink to="/signUp" className="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+            {/* <button > */}
+            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+              Join Now
+            </span>
+            {/* </button> */}
           </NavLink>
         </div>
-        <div>
+
+        <div className="md:w-1/2">
           <img
             src="https://secure.meetupstatic.com/next/images/indexPage/irl_event.svg?w=828"
             alt="event icon"
+            className="h-full w-full"
           />
         </div>
       </div>
-      <div className="w-9/12 flex items-center justify-between m-auto mt-4 mb-4">
-        <p className="text-4xl font-bold underline underline-offset-1 text-violet-700">
+
+      <div className="flex items-center justify-between m-auto mt-4 mb-4">
+        <p className="text-xl md:text-4xl font-bold underline underline-offset-1 text-violet-700">
           Trending Events
         </p>
         <NavLink to="/event">
-          <p className="text-xl font-bold text-blue-600">See all events</p>
+          <p className="md:text-xl font-bold text-blue-600">See all events</p>
         </NavLink>
       </div>
       {/* Render each chunk of cards in a separate row */}
-      {chunkedCards.map((chunk, index) => (
-        <div key={index} className="w-9/12 flex m-auto justify-between mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 x; lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* {chunkedCards.map((chunk, index) => (
+        <div key={index} className="max-w-96 mx-auto">
           {chunk.map((card, cardIndex) => (
             <div key={cardIndex}>
               <Card card={card} />
             </div>
           ))}
         </div>
-      ))}
-      <div className="">
-        <Footers />
+      ))} */}
+        {
+          cards.map((card, index) => {
+            return <div key={index} className="">
+              <Card card={card} />
+            </div>
+          })
+        }
       </div>
+      {/* <Footers /> */}
     </div>
   );
 };

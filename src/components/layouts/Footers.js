@@ -19,56 +19,58 @@ import {
 
 function Footers() {
   return (
-    <Footer container className="bg-slate-200">
+    <Footer container className="bg-gradient-to-br from-purple-900 to-blue-900 text-white mt-16">
       <div className="w-full ">
         <div className="grid w-full justify-around sm:flex sm:justify-around md:flex md:grid-cols-1 mt-16">
           <div>
             <img
-              className="h-32 w-32"
+              className="h-24 w-24"
               src="https://media.licdn.com/dms/image/C4E0BAQFa4a4sDSQ2Tw/company-logo_200_200/0/1630621716683/flow_events_agency_logo?e=2147483647&v=beta&t=Jy5ZfBnCZL5SCCkQsGQNBPvTnZM6UbUs3NnHHBUq1Ww"
             ></img>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
             <div>
-              <FooterTitle title="about" />
+              <FooterTitle className="text-white" title="about" />
               <FooterLinkGroup col>
-                <FooterLink href="#"> EventFlow</FooterLink>
-                <FooterLink href="#">EventFlow</FooterLink>
+                <FooterLink className="text-white" href="#"> EventFlow</FooterLink>
+                <FooterLink className="text-white" href="#">EventFlow</FooterLink>
               </FooterLinkGroup>
             </div>
             <div>
-              <FooterTitle title="Follow us" />
+              <FooterTitle className="text-white" title="Follow us" />
               <FooterLinkGroup col>
-                <FooterLink href="#">Github</FooterLink>
-                <FooterLink href="#">Discord</FooterLink>
+                <FooterLink className="text-white" href="#">Github</FooterLink>
+                <FooterLink className="text-white" href="#">Discord</FooterLink>
               </FooterLinkGroup>
             </div>
             <div>
-              <FooterTitle title="Legal" />
+              <FooterTitle className="text-white" title="Legal" />
               <FooterLinkGroup col>
-                <FooterLink href="#">Privacy Policy</FooterLink>
-                <FooterLink href="#">Terms &amp; Conditions</FooterLink>
+                <FooterLink className="text-white" href="#">Privacy Policy</FooterLink>
+                <FooterLink className="text-white" href="#">Terms &amp; Conditions</FooterLink>
               </FooterLinkGroup>
             </div>
           </div>
         </div>
         <FooterDivider />
         <div className="w-full sm:flex sm:items-center sm:justify-between">
-          <FooterCopyright href="#" by="EventFlow™" year={2024} />
+          <FooterCopyright className="text-white" href="#" by="EventFlow™" year={2024} />
           <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
-            <FooterIcon href="#" icon={BsFacebook} />
+            <FooterIcon className="text-white" href="#" icon={BsFacebook} />
             <FooterIcon
+              className="text-white"
               href="https://www.linkedin.com/in/tanvir-niaz-khan/"
               target="__blank"
               icon={BsLinkedin}
             />
-            <FooterIcon href="#" target="__blank" icon={BsTwitter} />
+            <FooterIcon className="text-white" href="#" target="__blank" icon={BsTwitter} />
             <FooterIcon
+              className="text-white"
               href="https://github.com/TanvirNiazKhan"
               target="__blank"
               icon={BsGithub}
             />
-            <FooterIcon href="#" icon={BsDribbble} />
+            <FooterIcon className="text-white" href="#" icon={BsDribbble} />
           </div>
         </div>
       </div>

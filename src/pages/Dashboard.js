@@ -61,8 +61,8 @@ const Tabs = ({ color }) => {
   return (
     <>
       {user ? (
-        <div className="flex flex-wrap w-full h-full">
-          <div className="m-auto w-9/12">
+        <div className="flex flex-wrap w-full h-full mb-96">
+          <div className="m-auto w-9/12 ">
             <ul
               className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row"
               role="tablist"
@@ -152,7 +152,7 @@ const Tabs = ({ color }) => {
                     className={openTab === 3 ? "block" : "hidden"}
                     id="link3"
                   >
-                    <ShowMyEvents/>
+                    <ShowMyEvents />
                   </div>
                 </div>
               </div>
