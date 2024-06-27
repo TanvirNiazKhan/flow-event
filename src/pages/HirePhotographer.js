@@ -2,7 +2,7 @@ import React from "react";
 
 function HirePhotographer() {
   return (
-    <div className="w-full flex items-center ">
+    <div className="w-full flex items-center mb-[400px]">
       <div className="flex m-auto justify-evenly ">
         <div className="flex m-auto w-9/12 mt-4 mr-8">
           <a
