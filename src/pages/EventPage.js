@@ -5,6 +5,8 @@ import { doc, getDoc } from "firebase/firestore";
 import NotificationCard from "../components/layouts/NotificationCard";
 import Timer from "../components/layouts/Timer";
 import Ticket from "../components/layouts/Ticket";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
 export const EventPage = () => {
     const { eventPage } = useParams(); // Extract eventPage from useParams
@@ -131,14 +133,17 @@ export const EventPage = () => {
                                     EVENT LOCATION
                                 </h2>
                             </div>
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1234567890123!2d-73.985428!3d40.748817!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDI1JzEwLjAiTiA3M8KwMjUnMTkuMCJX!5e0!3m2!1sen!2sus!4v1634567890123!5m2!1sen!2sus"
-                                width="100%"
-                                height="450"
-                                style={{ border: 0 }}
-                                allowFullScreen=""
-                                loading="lazy"
-                            ></iframe>
+                            <MapContainer center={[23.8103, 90.4125]} zoom={13} style={{ height: "450px", width: "100%" }}>
+                                <TileLayer
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                />
+                                <Marker position={[23.8103, 90.4122]}>
+                                    <Popup>
+                                        Event Location: Dhaka
+                                    </Popup>
+                                </Marker>
+                            </MapContainer>
                         </div>
                     </div>
                 </div>
@@ -146,3 +151,5 @@ export const EventPage = () => {
         </div>
     );
 };
+
+export default EventPage;
