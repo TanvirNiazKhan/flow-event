@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 function ShowEvent({ event }) {
   const eventDate = new Date(event.event_date.seconds * 1000); // Convert Firestore Timestamp to JavaScript Date
   const [isFavorite, setIsFavorite] = useState(false);
-  const [{ user }, dispatch] = useStateValue();
+  const [{ user }, ] = useStateValue();
 
   useEffect(() => {
     const checkFavoriteStatus = async () => {

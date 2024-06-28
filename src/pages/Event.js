@@ -38,7 +38,7 @@ function Event() {
     const currentTime = new Date().getTime();
 
     // Check if cached data is available and not older than 24 hours
-    if (cachedEvents && cachedTimestamp && currentTime - cachedTimestamp < 86400000) {
+    if (cachedEvents && cachedTimestamp && currentTime - cachedTimestamp < 60000) {
       console.log("from chache");
       setEvents(JSON.parse(cachedEvents));
     } else {

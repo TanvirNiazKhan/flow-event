@@ -1,9 +1,7 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 import { useStateValue } from "../../contexts/StateProvider";
-
-import userContext, { initialState } from "../../contexts/reducer";
 import { Avatar } from "@mui/material";
 function Nav() {
   const [{ user }, dispatch] = useStateValue();
@@ -22,7 +20,7 @@ function Nav() {
       });
   }
   return (
-    <header className="w-full items-center z-10 sticky top-0 bg-white py-3">
+    <header className="w-full items-center z-10 sticky top-0 bg-white py-3 ">
       <div className="flex items-center justify-around shadow-lg" >
         <div>
           <NavLink to="/">

@@ -47,7 +47,8 @@ export const EventPage = () => {
         console.error("Invalid date format:", event.event_date);
         return <div>Invalid date format</div>;
     }
-
+    console.log(event.total_seats)
+    const seat_available = event.total_seats - event.registered_persons?.length;
     return (
         <div className="bg-gray-100 w-10/12 m-auto">
             <img src={event.event_img} alt="Your Image" className="w-full h-[500px]" />
@@ -95,7 +96,7 @@ export const EventPage = () => {
                                 </svg>
                             </div>
                             <h1 className="text-xl font-bold text-center mb-4">
-                                Only few tickets left
+                                Only {seat_available} tickets left
                             </h1>
                         </div>
                         <div className="bg-white rounded-lg shadow-lg border-l-4 border-orange-500 p-4">

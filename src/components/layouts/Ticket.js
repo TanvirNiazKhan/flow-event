@@ -31,6 +31,8 @@ const Ticket = ({ event }) => {
     checkRegistration();
   }, [eventId, user]);
 
+  const seat_available = event.total_seats - (event.registered_persons?.length || 0);
+
   const handleRegisterEvent = async () => {
     if (isRegistered) {
       toast.info('You are already registered for this event.');
@@ -44,6 +46,7 @@ const Ticket = ({ event }) => {
       user_email: user?.user_email,
       hosted_agency: "Flow Event Agency"
     };
+
     let new_event_Date;
     if (event_date && event_date.seconds) {
       new_event_Date = new Date(event.event_date.seconds * 1000);
@@ -99,16 +102,12 @@ const Ticket = ({ event }) => {
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-lg border border-blue-500">
       <div className="px-6 py-4">
-        <div>
-          {/* <p>7.5km | General</p> */}
-        </div>
-        <hr className="p-4 flex justify-center items-center" />
         <div className="font-bold text-xl mb-2"></div>
 
         <button
           onClick={handleRegisterEvent}
-          className={`font-bold py-2 px-4 rounded text-white border-2 transition-all duration-300 ease-in-out ${isRegistered ? 'bg-gray-400 border-gray-400 cursor-not-allowed' : 'bg-purple-600 border-purple-600 hover:bg-transparent hover:text-black'}`}
-          disabled={isRegistered}
+          className={`font-bold py-2 px-4 rounded text-white border-2 transition-all duration-300 ease-in-out ${isRegistered || seat_available <= 0 ? 'bg-gray-400 border-gray-400 cursor-not-allowed' : 'bg-purple-600 border-purple-600 hover:bg-transparent hover:text-black'}`}
+          disabled={isRegistered || seat_available <= 0}
         >
           {isRegistered ? 'Registered' : 'Register Now'}
         </button>

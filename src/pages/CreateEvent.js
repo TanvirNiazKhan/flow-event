@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getFirestore } from 'firebase/firestore';
 import { useFormik } from "formik";
-import { ToastContainer, toast } from "react-toastify";
-
+import { toast } from "react-toastify";
 import { db } from "../Firebase/firebase";
-import { doc, getDoc,addDoc,collection } from "firebase/firestore"
+import { addDoc, collection } from "firebase/firestore"
 import { useStateValue } from "../contexts/StateProvider";
 import * as Yup from "yup";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const validationSchema = Yup.object({
   eventName: Yup.string().required("Event Title is required"),
-  eventDetails: Yup.string().required("Event Details are required"), // Corrected message
+  eventDetails: Yup.string().required("Event Details are required"),
   short_description: Yup.string(),
   eventLocation: Yup.string(),
   event_img: Yup.string().url("Invalid URL format"),
@@ -28,6 +26,7 @@ const validationSchema = Yup.object({
       .positive("Amount must be positive"),
     otherwise: (schema) => schema,
   }),
+  total_seats: Yup.number().integer().min(0, "Total seats must be a non-negative integer"),
 });
 
 
@@ -78,10 +77,12 @@ function CreateEvent() {
         short_description: values.short_description,
         event_status: "pending",
         event_email: user?.user_email,
+        total_seats: values.total_seats,
       };
 
+
       try {
-        
+
         const docRef = await addDoc(collection(db, "events"), eventData);
         console.log("Event added successfully with ID: ", docRef.id);
         toast.success("Event Request in process")
@@ -102,131 +103,149 @@ function CreateEvent() {
 
   return (
     <div>
-    <div className="min-h-screen p-6 bg-gray-100 flex justify-center">
-      <div className="container max-w-screen-lg mx-auto">
-        <div>
-          <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-            <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
-              <div className="text-gray-600">
-                <p className="text-lg text-purple-500 font-bold">
-                  Event Details
-                </p>
-                <p>Please fill out all the fields.</p>
-              </div>
+      <div className="min-h-screen p-6 bg-gray-100 flex justify-center">
+        <div className="container max-w-screen-lg mx-auto">
+          <div>
+            <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+              <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+                <div className="text-gray-600">
+                  <p className="text-lg text-purple-500 font-bold">
+                    Event Details
+                  </p>
+                  <p>Please fill out all the fields.</p>
+                </div>
 
-              <div className="lg:col-span-2">
-                <form onSubmit={formik.handleSubmit}>
-                  <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-                    <div className="md:col-span-5 text-left">
-                      <label htmlFor="eventName" className="font-bold">
-                        Event Title
-                      </label>
-                      <input
-                        type="text"
-                        id="eventName"
-                        name="eventName"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formik.values.eventName}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                      {formik.touched.eventName && formik.errors.eventName ? (
-                        <div className="text-red-500 text-xs">{formik.errors.eventName}</div>
-                      ) : null}
-                    </div>
+                <div className="lg:col-span-2">
+                  <form onSubmit={formik.handleSubmit}>
+                    <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+                      <div className="md:col-span-5 text-left">
+                        <label htmlFor="eventName" className="font-bold">
+                          Event Title
+                        </label>
+                        <input
+                          type="text"
+                          id="eventName"
+                          name="eventName"
+                          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                          value={formik.values.eventName}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        {formik.touched.eventName && formik.errors.eventName ? (
+                          <div className="text-red-500 text-xs">{formik.errors.eventName}</div>
+                        ) : null}
+                      </div>
 
-                    <div className="md:col-span-5 text-left">
-                      <label
-                        htmlFor="eventDetails"
-                        className="font-bold text-md"
-                        required="true"
-                      >
-                        Event Details(*)
-                      </label>
-                      <input
-                        type="text"
-                        id="eventDetails"
-                        name="eventDetails"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 py-12"
-                        value={formik.values.eventDetails}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        placeholder="Give Event Details here"
-                      />
-                      {formik.touched.eventDetails && formik.errors.eventDetails ? (
-                        <div className="text-red-500 text-xs">{formik.errors.eventDetails}</div>
-                      ) : null}
-                    </div>
-                    <div className="md:col-span-6 text-left">
-                      <label htmlFor="short_description" className="font-bold">
-                        Short Description
-                      </label>
-                      <input
-                        type="text"
-                        id="short_description"
-                        name="short_description"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formik.values.short_description}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        placeholder=""
-                      />
-                      {formik.touched.short_description && formik.errors.short_description ? (
-                        <div className="text-red-500 text-xs">{formik.errors.short_description}</div>
-                      ) : null}
-                    </div>
+                      <div className="md:col-span-5 text-left">
+                        <label
+                          htmlFor="eventDetails"
+                          className="font-bold text-md"
+                          required="true"
+                        >
+                          Event Details(*)
+                        </label>
+                        <input
+                          type="text"
+                          id="eventDetails"
+                          name="eventDetails"
+                          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 py-12"
+                          value={formik.values.eventDetails}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          placeholder="Give Event Details here"
+                        />
+                        {formik.touched.eventDetails && formik.errors.eventDetails ? (
+                          <div className="text-red-500 text-xs">{formik.errors.eventDetails}</div>
+                        ) : null}
+                      </div>
+                      <div className="md:col-span-6 text-left">
+                        <label htmlFor="short_description" className="font-bold">
+                          Short Description
+                        </label>
+                        <input
+                          type="text"
+                          id="short_description"
+                          name="short_description"
+                          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                          value={formik.values.short_description}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          placeholder=""
+                        />
+                        {formik.touched.short_description && formik.errors.short_description ? (
+                          <div className="text-red-500 text-xs">{formik.errors.short_description}</div>
+                        ) : null}
+                      </div>
 
-                    <div className="md:col-span-6 text-left">
-                      <label htmlFor="eventLocation" className="font-bold">
-                        Location in Details
-                      </label>
-                      <input
-                        type="text"
-                        id="eventLocation"
-                        name="eventLocation"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formik.values.eventLocation}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        placeholder=""
-                      />
-                      {formik.touched.eventLocation && formik.errors.eventLocation ? (
-                        <div className="text-red-500 text-xs">{formik.errors.eventLocation}</div>
-                      ) : null}
-                    </div>
-                    <div className="md:col-span-6 text-left">
-                      <label htmlFor="event_img" className="font-bold">
-                        Banner Link
-                      </label>
-                      <input
-                        type="text"
-                        id="event_img"
-                        name="event_img"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formik.values.event_img}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        placeholder="Please give the url"
-                      />
-                      {formik.touched.event_img && formik.errors.event_img ? (
-                        <div className="text-red-500 text-xs">{formik.errors.event_img}</div>
-                      ) : null}
-                    </div>
-                    <div className="md:col-span-6 text-left">
-                      <label htmlFor="organizerName" className="font-bold">
-                        Organizer Name
-                      </label>
-                      <input
-                        type="text"
-                        id="organizerName"
-                        name="organizerName"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formik.values.organizerName}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        placeholder="Please give the url"
-                      />
-                      {formik.touched.organizerName && formik.errors.organizerName ? (<div className="text-red-500 text-xs">{formik.errors.organizerName}</div>
+                      <div className="md:col-span-6 text-left">
+                        <label htmlFor="eventLocation" className="font-bold">
+                          Location in Details
+                        </label>
+                        <input
+                          type="text"
+                          id="eventLocation"
+                          name="eventLocation"
+                          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                          value={formik.values.eventLocation}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          placeholder=""
+                        />
+                        {formik.touched.eventLocation && formik.errors.eventLocation ? (
+                          <div className="text-red-500 text-xs">{formik.errors.eventLocation}</div>
+                        ) : null}
+                      </div>
+                      <div className="md:col-span-6 text-left">
+                        <label htmlFor="event_img" className="font-bold">
+                          Banner Link
+                        </label>
+                        <input
+                          type="text"
+                          id="event_img"
+                          name="event_img"
+                          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                          value={formik.values.event_img}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          placeholder="Please give the url"
+                        />
+                        {formik.touched.event_img && formik.errors.event_img ? (
+                          <div className="text-red-500 text-xs">{formik.errors.event_img}</div>
+                        ) : null}
+                      </div>
+                      <div className="md:col-span-6 text-left">
+                        <label htmlFor="organizerName" className="font-bold">
+                          Organizer Name
+                        </label>
+                        <input
+                          type="text"
+                          id="organizerName"
+                          name="organizerName"
+                          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                          value={formik.values.organizerName}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          placeholder="Please give the url"
+                        />
+                        {formik.touched.organizerName && formik.errors.organizerName ? (<div className="text-red-500 text-xs">{formik.errors.organizerName}</div>
+                        ) : null}
+                      </div>
+                      <div className="md:col-span-5 text-left">
+                        <label htmlFor="total_seats" className="font-bold">
+                          Total Seats
+                        </label>
+                        <input
+                          type="number"
+                          id="total_seats"
+                          name="total_seats"
+                          value={formik.values.total_seats}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                          placeholder="Enter total seats"
+                        />
+                        {formik.touched.total_seats && formik.errors.total_seats ? (
+                          <div className="text-red-500 text-xs">{formik.errors.total_seats}</div>
                         ) : null}
                       </div>
                       <div className="md:col-span-6 text-left">
@@ -277,6 +296,8 @@ function CreateEvent() {
                           dateFormat="MMMM d, yyyy h:mm aa"
                           className="h-8 border mt-1 rounded px-2 w-full bg-gray-50"
                         />
+
+
                         {formik.touched.deadline && formik.errors.deadline ? (
                           <div className="text-red-500 text-xs">{formik.errors.deadline}</div>
                         ) : null}
