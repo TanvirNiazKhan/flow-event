@@ -4,10 +4,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { db } from "../Firebase/firebase";
-import { addDoc, collection } from "firebase/firestore"
+import { addDoc, collection } from "firebase/firestore";
 import { useStateValue } from "../contexts/StateProvider";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+
 const validationSchema = Yup.object({
   eventName: Yup.string().required("Event Title is required"),
   eventDetails: Yup.string().required("Event Details are required"),
@@ -21,29 +22,14 @@ const validationSchema = Yup.object({
   eventType: Yup.string().required("Event Type is required"),
   amount: Yup.number().when("eventType", {
     is: (value) => value === "paid",
-    then: (schema) => schema
-      .required("Amount is required")
-      .positive("Amount must be positive"),
+    then: (schema) => schema.required("Amount is required").positive("Amount must be positive"),
     otherwise: (schema) => schema,
   }),
   total_seats: Yup.number().integer().min(0, "Total seats must be a non-negative integer"),
 });
 
-
 function CreateEvent() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [eventType, setEventType] = useState("free");
-  const [amount, setAmount] = useState("");
-  const [eventName, setEventName] = useState("");
-  const [event_img, setEvent_img] = useState("");
-  const [short_description, setShort_description] = useState("");
-  const [eventDetails, setEventDetails] = useState("");
-  const [eventLocation, setEventLocation] = useState("");
-  const [organizerName, setOrganizerName] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [deadline, setDeadline] = useState("");
   const [{ user }] = useStateValue();
-  // console.log(user?.user_email)
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -58,14 +44,14 @@ function CreateEvent() {
       startDate: new Date(),
       deadline: new Date(),
       eventType: "free",
-      amount: ""
+      amount: 0,
+      total_seats: 0,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      // Prepare the event data
       const eventData = {
         name: values.eventName,
-        amount: values.eventType === "paid" ? values.amount : "",
+        amount: values.eventType === "paid" ? values.amount : 0,
         contact: values.contactNumber,
         created_at: new Date(),
         deadline: values.deadline,
@@ -80,26 +66,22 @@ function CreateEvent() {
         total_seats: values.total_seats,
       };
 
-
       try {
-
         const docRef = await addDoc(collection(db, "events"), eventData);
         console.log("Event added successfully with ID: ", docRef.id);
-        toast.success("Event Request in process")
+        toast.success("Event Request in process");
         navigate("/");
         formik.resetForm();
       } catch (error) {
         console.error("Error adding event: ", error);
         toast.error("Failed to submit event. Please try again later.");
       }
-    }
+    },
   });
 
   const handleEventTypeChange = (e) => {
-    setEventType(e.target.value);
     formik.setFieldValue("eventType", e.target.value);
   };
-
 
   return (
     <div>
@@ -137,11 +119,7 @@ function CreateEvent() {
                       </div>
 
                       <div className="md:col-span-5 text-left">
-                        <label
-                          htmlFor="eventDetails"
-                          className="font-bold text-md"
-                          required="true"
-                        >
+                        <label htmlFor="eventDetails" className="font-bold text-md">
                           Event Details(*)
                         </label>
                         <input
@@ -158,6 +136,7 @@ function CreateEvent() {
                           <div className="text-red-500 text-xs">{formik.errors.eventDetails}</div>
                         ) : null}
                       </div>
+
                       <div className="md:col-span-6 text-left">
                         <label htmlFor="short_description" className="font-bold">
                           Short Description
@@ -195,6 +174,7 @@ function CreateEvent() {
                           <div className="text-red-500 text-xs">{formik.errors.eventLocation}</div>
                         ) : null}
                       </div>
+
                       <div className="md:col-span-6 text-left">
                         <label htmlFor="event_img" className="font-bold">
                           Banner Link
@@ -213,6 +193,7 @@ function CreateEvent() {
                           <div className="text-red-500 text-xs">{formik.errors.event_img}</div>
                         ) : null}
                       </div>
+
                       <div className="md:col-span-6 text-left">
                         <label htmlFor="organizerName" className="font-bold">
                           Organizer Name
@@ -227,9 +208,11 @@ function CreateEvent() {
                           onBlur={formik.handleBlur}
                           placeholder="Please give the url"
                         />
-                        {formik.touched.organizerName && formik.errors.organizerName ? (<div className="text-red-500 text-xs">{formik.errors.organizerName}</div>
+                        {formik.touched.organizerName && formik.errors.organizerName ? (
+                          <div className="text-red-500 text-xs">{formik.errors.organizerName}</div>
                         ) : null}
                       </div>
+
                       <div className="md:col-span-5 text-left">
                         <label htmlFor="total_seats" className="font-bold">
                           Total Seats
@@ -248,6 +231,7 @@ function CreateEvent() {
                           <div className="text-red-500 text-xs">{formik.errors.total_seats}</div>
                         ) : null}
                       </div>
+
                       <div className="md:col-span-6 text-left">
                         <label htmlFor="contactNumber" className="font-bold">
                           Contact Number
@@ -266,6 +250,7 @@ function CreateEvent() {
                           <div className="text-red-500 text-xs">{formik.errors.contactNumber}</div>
                         ) : null}
                       </div>
+
                       <div className="md:col-span-6 text-left">
                         <label htmlFor="startDate" className="mr-4 font-bold">
                           Event Date
@@ -283,6 +268,7 @@ function CreateEvent() {
                           <div className="text-red-500 text-xs">{formik.errors.startDate}</div>
                         ) : null}
                       </div>
+
                       <div className="md:col-span-6 text-left">
                         <label htmlFor="deadline" className="mr-4 font-bold">
                           Event Deadline
@@ -296,12 +282,11 @@ function CreateEvent() {
                           dateFormat="MMMM d, yyyy h:mm aa"
                           className="h-8 border mt-1 rounded px-2 w-full bg-gray-50"
                         />
-
-
                         {formik.touched.deadline && formik.errors.deadline ? (
                           <div className="text-red-500 text-xs">{formik.errors.deadline}</div>
                         ) : null}
                       </div>
+
                       <div className="md:col-span-5 text-left">
                         <label htmlFor="eventType" className="mr-4 font-bold">
                           Event Type

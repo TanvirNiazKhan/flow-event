@@ -48,7 +48,12 @@ export const EventPage = () => {
         return <div>Invalid date format</div>;
     }
     console.log(event.total_seats)
-    const seat_available = event.total_seats - event.registered_persons?.length;
+    let seat_available= event.total_seats;
+    if(event.registered_persons){
+         seat_available = event.total_seats - event.registered_persons?.length;
+    }
+    
+    
     return (
         <div className="bg-gray-100 w-10/12 m-auto">
             <img src={event.event_img} alt="Your Image" className="w-full h-[500px]" />
