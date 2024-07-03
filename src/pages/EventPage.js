@@ -47,6 +47,13 @@ export const EventPage = () => {
         console.error("Invalid date format:", event.event_date);
         return <div>Invalid date format</div>;
     }
+    const deadlineDate = new Date(event.deadline.seconds * 1000);
+    const currentDateInMs = Date.now();
+    console.log(currentDateInMs, " ", deadlineDate);
+
+    const currentDate = deadlineDate - currentDateInMs;
+    const currentDateInDays = currentDate / (1000 * 60 * 60 * 24);
+    console.log(currentDateInDays);
     console.log(event.total_seats)
     const seat_available = event.total_seats - event.registered_persons?.length;
     return (
@@ -59,7 +66,7 @@ export const EventPage = () => {
                         <p className="text-sm">at {event.event_location}</p>
                         <p className="text-sm">{eventDate.toLocaleDateString()}</p>
                         <NotificationCard date={eventDate.toLocaleDateString()} />
-                        <Timer />
+                        <Timer  militodays={currentDateInDays}/>
 
                         <div className="py-4">
                             <p className="text-lg font-bold">ABOUT THIS EVENT</p>
